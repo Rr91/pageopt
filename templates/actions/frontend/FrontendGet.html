@@ -1,0 +1,48 @@
+{literal}<style>.main-menu__wrapper {opacity: 0;}</style>{/literal}
+<div class="horizontal-menu catalog-page" style="width: 100%;"> 
+<div class="outer-wrapper"> 
+<div class="wrapper" style="width: 100%;">
+{if !empty($filters)}
+<aside class="default-sidebar">
+	<div class="sidebar__main-menu{if $theme_settings.vertical_menu_hide && !empty($filters)} is-menu-hidden{/if}"></div>
+	{if !empty($filters)}{include file="`$wa->shop->themePath('incart_mody')`category.filters.html" inline}{/if}
+</aside>
+{/if}
+<main class="home-main">
+	<div id="product-list">
+		<div style="background: #fff;background: #fff;padding: 30px;text-align: center;">
+    	{if $price_id}<div style="padding-bottom: 10px;">Доступ к прайс-листу для интеграции с сайтом: <a href="/getpricelisthash/{$hash}">Ссылка</a></div>{/if}
+    	<div><input type="text" name="search_my" id="_search_my" placeholder="Найти товары" value='{$query_my}'></div>
+    </div>
+    	{if !$products} {$products = $wa->shop->productSet("bestsellers")} {/if}
+		{if !$products}
+			{if !empty($filters)}
+				<div class="catalog-items">[`No products were found.`]</div>
+			{else}
+				<div class="catalog-items">[`This category does not contain any products.`]</div>
+			{/if}
+		{else}
+			{if $wa->shop}
+				{include file="`$wa->shop->themePath('incart_mody')`list-thumbs_my.html" products=$products}
+			{/if}
+			{if isset($pages_count) && $pages_count > 1}
+				<div class="pagination pagination--unishop {if 1}lazyloading-paging{else}paging-nav{/if}"  data-times="2" data-link-text="[`Load more`]" data-loading-str="[`Loading...`]">
+					{capture assign=pagination}
+                        {wa_pagination total=$pages_count attrs=['class' => "pagination__list"]}
+                    {/capture}
+                    {shopSeofilterViewHelper::paginationDecorate($pagination)}
+				</div>
+			{/if}
+		{/if}
+	</div>
+	{literal}
+		<script>
+			$(document).on('change', '#_search_my', function(e){
+				location.href="/my/registrypage/?query_my="+$(this).val();
+			});
+		</script>
+	{/literal}
+</main>
+</div>
+</div>
+</div>
